@@ -74,16 +74,12 @@ jobs:
       run: echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
       env:
         SSH_PRIVATE_KEY: ${{  secrets.SSH_PRIVATE_KEY  }}
-    - name: Test
-      run: cat ~/.ssh/id_rsa
-      env:
-        SSH_PRIVATE_KEY: ${{  secrets.SSH_PRIVATE_KEY  }}
     - name: Dar permisos a la clave privada
       run: chmod 600 ~/.ssh/id_rsa
     - name: Configurar opciones de la clave privada
       run: echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - name: Copiar archivos al servidor
-      run: rsync -rav --delete dist/ deployer@example.com:/var/www/001-example.com/html/dist
+      run: rsync -rav --delete dist/ deployer@52.71.205.244:/var/www/todolist/html/dist
     
 
 
