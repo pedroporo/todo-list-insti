@@ -67,7 +67,7 @@ jobs:
         name: Build
         path: dist
     - name: Instalar dependencias requeridas
-      run: apk add --no-cache rsync openssh
+      run: apk add --no-cache rsync openssh openssh-client
     - name: Configure SSH
       uses: shimataro/ssh-key-action@v2
       with:
