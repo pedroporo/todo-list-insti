@@ -71,7 +71,14 @@ jobs:
     - name: Crear carpeta ssh
       run: |
        mkdir -p ~/.ssh
+       which ssh-agent || (sudo apk update && sudo apk add openssh-client)
+       which rsync || (sudo apk update && sudo apk add rsync)
+       mkdir -p ~/.ssh
+       chmod 700 ~/.ssh
+       touch ~/.ssh/private.key
        touch ~/.ssh/known_hosts
+       chmod 600 ~/.ssh/private.key
+       echo -e "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/private.key
     - name: Crear clave privada
       run: echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
       env:
@@ -79,7 +86,7 @@ jobs:
     - name: Dar permisos a la clave privada
       run: chmod 600 ~/.ssh/*
     - name: Configurar opciones de la clave privada
-      run: echo -e "Host *\n\t StrictHostKeyChecking no\n\n" > /etc/ssh/ssh_config
+      run: echo -e "Host *\n\t StrictHostKeyChecking no\n\n" > ~/.ssh/config
     - name: Test
       run: |
         echo $SSH_PRIVATE_KEY
