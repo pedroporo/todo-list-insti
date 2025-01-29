@@ -79,7 +79,7 @@ jobs:
     - name: Dar permisos a la clave privada
       run: chmod 600 ~/.ssh/*
     - name: Configurar opciones de la clave privada
-      run: echo -e "Host *\n\t StrictHostKeyChecking no\n\n" > ~/.ssh/config
+      run: echo -e "Host *\n\t StrictHostKeyChecking no\n\n" > /etc/ssh/ssh_config
     - name: Test
       run: |
         echo $SSH_PRIVATE_KEY
