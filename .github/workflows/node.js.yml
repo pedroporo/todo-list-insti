@@ -69,11 +69,15 @@ jobs:
     - name: Instalar dependencias requeridas
       run: apk add --no-cache rsync openssh
     - name: Crear carpeta ssh
-      run: mkdir -p ~/.ssh
+      run: |
+       mkdir -p ~/.ssh
+       touch /root/.ssh/known_hosts
     - name: Crear clave privada
       run: echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
       env:
         SSH_PRIVATE_KEY: ${{  secrets.SSH_PRIVATE_KEY  }}
+    - name: Dar permisos a la clave privada
+      run: chmod 600 ~/.ssh/*
     - name: Configurar opciones de la clave privada
       run: echo -e "Host *\n\t StrictHostKeyChecking no\n\n" > ~/.ssh/config
     - name: Test
@@ -87,8 +91,6 @@ jobs:
         SSH_PRIVATE_KEY: ${{  secrets.SSH_PRIVATE_KEY  }}
     - name: SSH test
       run:  ssh -v deployer@52.71.205.244
-    - name: Dar permisos a la clave privada
-      run: chmod 600 ~/.ssh/*
     - name: Copiar archivos al servidor
       run: rsync -rav --delete dist/ deployer@52.71.205.244:/var/www/todolist/html/dist
     
