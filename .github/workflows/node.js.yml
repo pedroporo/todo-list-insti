@@ -34,8 +34,6 @@ jobs:
           name: Build
           path: dist
           retention-days: 7
-    - run: ls -la
-      name: Test
   test:
     name: Test de la app
     runs-on: ubuntu-latest
@@ -57,8 +55,6 @@ jobs:
         path: dist
     - run: echo "Ejecutando las pruebas"
       name: Test node
-    - run: ls -la
-      name: Test
 
 
     
