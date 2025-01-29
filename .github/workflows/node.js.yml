@@ -55,6 +55,31 @@ jobs:
         path: dist
     - run: echo "Ejecutando las pruebas"
       name: Test node
+  deploy:
+    name: Subir la pagina al server
+    runs-on: ubuntu-latest
+    container: alpine
+    needs: [test]
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Build
+        path: dist
+    - name: Instalar dependencias requeridas
+      run: apk add --no-cache rsync openssh
+    - name: Crear carpeta ssh
+      run: mkdir -p ~/.ssh
+    - name: Crear clave privada
+      run: echo "${{ secrets.SSH_PRIVATE_KEY }}" >> ~/.ssh/id_dsa
+    - name: Dar permisos a la clave privada
+      run: chmod 600 ~/.ssh/id_dsa
+    - name: Configurar opciones de la clave privada
+      run: echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - name: Copiar archivos al servidor
+      run: rsync -rav --delete dist/ deployer@example.com:/var/www/001-example.com/html/dist
+    - name: Test
+      run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
 
 
     
