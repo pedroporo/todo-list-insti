@@ -1,0 +1,58 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Build Project
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Construir la app
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 21.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the project
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci --progress=false
+    - run: npm run build --if-present
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      with:
+          name: Build
+          path: dist
+          retention-days: 7
+  test:
+    name: Test de la app
+    runs-on: ubuntu-latest
+    needs: [build]
+    strategy:
+      matrix:
+        node-version: [ 21.x]
+    steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Build
+    - run: echo "Ejecutando las pruebas"
+      name: Test node
+
+
+    
