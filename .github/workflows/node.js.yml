@@ -71,18 +71,18 @@ jobs:
     - name: Crear carpeta ssh
       run: mkdir -p ~/.ssh
     - name: Crear clave privada
-      run: echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+      run: echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
       env:
         SSH_PRIVATE_KEY: ${{  secrets.SSH_PRIVATE_KEY  }}
     - name: Dar permisos a la clave privada
-      run: chmod 600 ~/.ssh/id_rsa
+      run: chmod 600 ~/.ssh/id_dsa
     - name: Configurar opciones de la clave privada
       run: echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - name: Test
       run: |
         echo $SSH_PRIVATE_KEY
         echo "hola"
-        cat ~/.ssh/id_rsa
+        cat ~/.ssh/id_dsa
         echo "hola"
         cat ~/.ssh/config
       env:
