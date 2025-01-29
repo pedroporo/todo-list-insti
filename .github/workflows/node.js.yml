@@ -71,7 +71,7 @@ jobs:
     - name: Crear carpeta ssh
       run: |
        mkdir -p ~/.ssh
-       touch /root/.ssh/known_hosts
+       touch ~/.ssh/known_hosts
     - name: Crear clave privada
       run: echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
       env:
